@@ -1,5 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
+import { OAUTH_API } from "../utils/constants";
 
 const Home: NextPage = () => {
   return (
@@ -12,9 +14,11 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <button className="px-4 py-2 text-sm text-white bg-black rounded-md">
-        Integrate Dribble
-      </button>
+      <Link href={OAUTH_API} passHref>
+        <a className="px-4 py-2 text-sm text-white bg-black rounded-md">
+          Integrate Dribbble
+        </a>
+      </Link>
     </div>
   );
 };
