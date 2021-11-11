@@ -15,7 +15,7 @@ const NoShots: NextPage<INoShotsProps> = ({ userUrl }) => {
         href={userUrl}
         target="_blank"
         referrerPolicy="no-referrer"
-        className="flex items-center justify-center px-2 py-2 mt-5 bg-green-500 rounded-md sm:px-3 sm:py-2 focus:ring-4 focus:ring-green-300 "
+        className="flex items-center justify-center px-2 py-2 mt-5 transition duration-200 bg-green-500 rounded-md sm:px-3 sm:py-2 focus:ring-4 focus:ring-green-300"
       >
         <span className="mr-2 text-sm font-semibold text-white sm:text-base">
           Let's start
