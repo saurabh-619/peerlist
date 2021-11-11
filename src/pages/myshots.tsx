@@ -43,8 +43,6 @@ const MyShots: NextPage<IMyShotsProps> = ({ user, shots }) => {
     setEndIndex((curr) => curr + 4);
   };
 
-  console.log({ endIndex, len: shots?.length });
-
   return (
     <div className="max-w-4xl min-h-screen py-5 mx-auto">
       <Header title="Peerlist | My shots" />
@@ -138,6 +136,16 @@ export default MyShots;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const access_token = context.req.cookies["access_token"];
+
+    // if (!__dev__ && !access_token) {
+    //   return {
+    //     redirect: {
+    //       destination: "/",
+    //       permanent: false,
+    //     },
+    //   };
+    // }
+
     const resUser = await fetch(USER_API, {
       method: "GET",
       headers: {
