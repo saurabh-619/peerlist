@@ -1,26 +1,24 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
+import Header from "../components/Header";
 import { OAUTH_API } from "../utils/constants";
 
 const Home: NextPage = () => {
+  console.log({ cookies: document.cookie });
   return (
     <div className="flex items-center justify-center h-screen">
-      <Head>
-        <title>Peerlist | Login</title>
-        <meta
-          name="description"
-          content="Get list of all shots with Dribble API."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Header title="Peerlist | Login" />
       <Link href={OAUTH_API} passHref>
-        <a className="px-4 py-2 text-sm text-white bg-black rounded-md">
+        <button className="px-4 py-2 text-sm text-white bg-black rounded-md">
           Integrate Dribbble
-        </a>
+        </button>
       </Link>
     </div>
   );
 };
+
+// export const getStaticProps: GetStaticProps = async (context) => {
+//   const access_token =
+// }
 
 export default Home;

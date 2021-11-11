@@ -1,6 +1,11 @@
 import { GetServerSideProps, NextPage } from "next";
-import { useEffect } from "react";
+import NextImage from "next/image";
 import { SHOTS_API, USER_API, __dev__ } from "../utils/constants";
+import Link from "next/link";
+import NoShots from "../components/NoShots";
+import ShotCard from "../components/ShotCard";
+import Header from "../components/Header";
+import { useState } from "react";
 
 interface UserType {
   name: string;
@@ -12,7 +17,7 @@ interface UserType {
   url: string;
 }
 
-interface ShotType {
+export interface ShotType {
   id: number;
   title: string;
   desc: string;
@@ -29,10 +34,103 @@ interface IMyShotsProps {
 }
 
 const MyShots: NextPage<IMyShotsProps> = ({ user, shots }) => {
-  useEffect(() => {
-    console.log({ user, shots });
-  }, []);
-  return <div>MyShots</div>;
+  const [endIndex, setEndIndex] = useState(4);
+
+  const getNextCurrentShots = () => {
+    if (shots && endIndex >= shots.length) {
+      return setEndIndex(4);
+    }
+    setEndIndex((curr) => curr + 4);
+  };
+
+  console.log({ endIndex, len: shots?.length });
+
+  return (
+    <div className="max-w-4xl min-h-screen py-5 mx-auto">
+      <Header title="Peerlist | My shots" />
+      <header className="flex items-center justify-between">
+        <div className="flex items-center justify-start left">
+          <div className="flex items-center w-24 h-auto mr-4">
+            <NextImage
+              src={"/dribbble-logo.svg"}
+              objectFit="contain"
+              width="100%"
+              height="100%"
+            />
+          </div>
+          <Link href="/" passHref>
+            <a className="text-xs font-medium text-gray-500 underline">
+              Remove account
+            </a>
+          </Link>
+        </div>
+        <div className="right">
+          <a
+            className="px-2 py-1 text-xs font-medium text-gray-500 rounded-md right bg-gray-50"
+            target="_blank"
+            referrerPolicy="no-referrer"
+            href={user?.url}
+          >
+            {user?.url}
+          </a>
+        </div>
+      </header>
+      <main>
+        {shots?.length === 0 ? (
+          <NoShots userUrl={user?.url} />
+        ) : (
+          <div className="grid h-full grid-cols-2 gap-4 shots">
+            {shots?.slice(0, endIndex)?.map((shot: ShotType) => (
+              <ShotCard key={shot.id} shot={shot} />
+            ))}
+          </div>
+        )}
+      </main>
+      {shots && shots?.length !== 0 && (
+        <button
+          onClick={getNextCurrentShots}
+          className="flex items-center justify-center w-32 px-2 py-1 mx-auto my-6 border-2 border-gray-200 rounded-md cursor-pointer"
+        >
+          <span className="mr-1 font-medium">
+            Show {endIndex < shots.length ? "more" : "less"}
+          </span>
+          {endIndex < shots.length ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3 h-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+                className="text-gray-600"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3 h-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 15l7-7 7 7"
+                className="text-gray-600"
+              />
+            </svg>
+          )}
+        </button>
+      )}
+    </div>
+  );
 };
 
 export default MyShots;
@@ -43,7 +141,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const resUser = await fetch(USER_API, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${process.env.TESTING_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${
+          __dev__ ? process.env.TESTING_ACCESS_TOKEN : access_token
+        }`,
       },
     });
     const userData = await resUser.json();
@@ -58,12 +158,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       url: userData.html_url,
     };
 
-    const resShots = await fetch(
-      (SHOTS_API + process.env.TESTING_ACCESS_TOKEN) as string,
-      {
-        method: "GET",
-      }
-    );
+    const resShots = await fetch(SHOTS_API, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${
+          __dev__ ? process.env.TESTING_ACCESS_TOKEN : access_token
+        }`,
+      },
+    });
     const shotsData = await resShots.json();
 
     const shots = shotsData?.map((shot: any) => ({
