@@ -44,11 +44,11 @@ const MyShots: NextPage<IMyShotsProps> = ({ user, shots }) => {
   };
 
   return (
-    <div className="max-w-4xl min-h-screen py-5 mx-auto">
-      <Header title="Peerlist | My shots" />
+    <div className="max-w-md min-h-screen px-5 py-5 mx-auto sm:px-1 sm:max-w-xl md:max-w-3xl md:px-5 lg:px-0 lg:max-w-4xl">
+      <Header title={`Peerlist | ${user?.name}`} />
       <header className="flex items-center justify-between">
         <div className="flex items-center justify-start left">
-          <div className="flex items-center w-24 h-auto mr-4">
+          <div className="flex items-center w-20 h-auto mr-4 sm:w-24">
             <NextImage
               src={"/dribbble-logo.svg"}
               objectFit="contain"
@@ -57,14 +57,14 @@ const MyShots: NextPage<IMyShotsProps> = ({ user, shots }) => {
             />
           </div>
           <Link href="/" passHref>
-            <a className="text-xs font-medium text-gray-500 underline">
+            <a className="font-medium text-gray-500 underline text-xxs sm:text-xs">
               Remove account
             </a>
           </Link>
         </div>
         <div className="right">
           <a
-            className="px-2 py-1 text-xs font-medium text-gray-500 rounded-md right bg-gray-50"
+            className="px-2 py-1 font-medium text-gray-500 rounded-md text-xxs sm:text-xs right bg-gray-50"
             target="_blank"
             referrerPolicy="no-referrer"
             href={user?.url}
@@ -77,7 +77,7 @@ const MyShots: NextPage<IMyShotsProps> = ({ user, shots }) => {
         {shots?.length === 0 ? (
           <NoShots userUrl={user?.url} />
         ) : (
-          <div className="grid h-full grid-cols-2 gap-4 shots">
+          <div className="grid h-full grid-cols-1 gap-4 sm:grid-cols-2 shots">
             {shots?.slice(0, endIndex)?.map((shot: ShotType) => (
               <ShotCard key={shot.id} shot={shot} />
             ))}
@@ -137,14 +137,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const access_token = context.req.cookies["access_token"];
 
-    // if (!__dev__ && !access_token) {
-    //   return {
-    //     redirect: {
-    //       destination: "/",
-    //       permanent: false,
-    //     },
-    //   };
-    // }
+    if (!__dev__ && !access_token) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
 
     const resUser = await fetch(USER_API, {
       method: "GET",
