@@ -2,6 +2,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { ACCESS_TOKEN_API } from "../utils/constants";
+import NextImage from "next/image";
 
 interface ICallbackProps {
   accessToken: string;
@@ -12,15 +13,20 @@ const Callback: NextPage<ICallbackProps> = ({ accessToken }) => {
 
   useEffect(() => {
     // Have to use inside useEffect as this code is gonna run on server side first
-    if (accessToken) {
-      router.replace("/myshots");
-    } else {
-      router.replace("/");
-    }
+    // if (accessToken) {
+    //   router.replace("/myshots");
+    // } else {
+    //   router.replace("/");
+    // }
   }, []);
 
   return (
-    <div className="flex items-center justify-center h-screen">Loading ...</div>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="relative w-10 h-10 ball-animation">
+        <NextImage src="/dribbble-ball.svg" width="100%" height="100%" />
+      </div>
+      <h2 className="mt-3 font-medium text-gray-500">Loading all shots ...</h2>
+    </div>
   );
 };
 

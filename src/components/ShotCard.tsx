@@ -14,6 +14,7 @@ const ShotCard: NextPage<IShotCardProps> = ({ shot }) => {
           width="100%"
           height="100%"
           className="w-full h-full rounded-t-md"
+          alt="Project cover image"
         />
       </div>
       <h3 className="flex items-center px-4 text-base font-semibold text-left text-gray-700 md:text-lg h-1/6">
